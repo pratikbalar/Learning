@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-client-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: create-client
+          image: oryd/hydra:v1.7.4
+          command: ["hydra", "clients", "create", "--endpoint", "http://127.0.0.1:4445", "--id", "gitea-client", "--secret", "secret", "--grant-types",  "authorization_code,refresh_token", "--response-types", "code,id_token", "--scope", "openid,offline", "--callbacks", "http://my-gitea-service.default.svc.cluster.local:8000/user/oauth2/ORY_Hydra/callback"]
+          command: ["hydra", "token", "user", "--client-id", "gitea-client", "--client-secret", "secret", "--endpoint",  "http://127.0.0.1:4444/", "--port", "5555", "--scope", "openid,offline"]
+          # command: 
+          #   - "hydra"
+          #   - "clients"
+          #   - "create"
+          #   - "--endpoint"
+          #   - "http://127.0.0.1:4445"
+          #   - "--id", "gitea-client"
+          #   - "--secret"
+          #   - "secret"-
+          #   - "--grant-types"
+          #   -  "authorization_code,refresh_token"
+          #   - "--response-types"
+          #   - "code,id_token"
+          #   - "--scope"
+          #   - "openid,offline"
+          #   - "--callbacks"
+          #   - "http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback"
+          #args: ["--endpoint http://127.0.0.1:4445", "--id gitea-client", "--secret secret", "--grant-types authorization_code,refresh_token", "--response-types code,id_token", "--scope openid,offline", "--callbacks http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback"]
+          #command: ["hydra"]
+          #args: ["token user", "--client-id gitea-client", "--client-secret secret", "--endpoint http://127.0.0.1:4444/", "--port 5555", "--scope openid,offline"]
+          # command: ["hydra"]
+            # args: 
+            #   - hydra 
+            #     clients
+            #     create
+            #    --endpoint http://127.0.0.1:4445
+            #    --id gitea-client
+            #    --secret secret
+            #    --grant-types authorization_code,refresh_token
+            #    --response-types code,id_token
+            #    --scope openid,offline
+            #    --callbacks http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback
+          # - token user
+          #   --client-id gitea-client
+          #   --client-secret secret
+          #   --endpoint http://127.0.0.1:4444/
+          #   --port 5555
+          #   --scope openid,offline
+      #     command: ["/scripts/test.sh"]
+      #     volumeMounts:
+      #     - name: create-client
+      #       mountPath: /script/test.sh
+      #       subPath: test.sh
+      # volumes:
+      # - name: create-client
+      #   configMap:
+      #     name: create-client-config
+      #     defaultMode: 0777
+      restartPolicy: Never
+  backoffLimit: 5
+
+  

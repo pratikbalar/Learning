@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-postgres-stateful
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresd
+  template:
+    metadata:
+      labels:
+        app: postgresd
+    spec:
+      containers:
+      - name: postgresd
+        image: postgres:9.6
+        envFrom:
+          - configMapRef:
+              name: postgres-config
+        ports:
+        - containerPort: 5432
+          
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgresd
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+    nodePort: 30046
+  selector:
+    app: postgresd

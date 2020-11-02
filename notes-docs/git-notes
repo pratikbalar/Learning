@@ -1,0 +1,293 @@
+Just my notes... decided to share in case some one wants to use them:
+
+https://www.youtube.com/playlist?list=PL-osiE80TeTuRUfjRe54Eea17-YfnOOAx
+
+https://gitimmersion.com/lab_11.html
+
+Terminal commands:
+	ls - lists all of the folders 
+	ls -la - lists all of the files 
+	cd .. - returns one dir back 
+	cd - enters a directory
+	. - just install in the current directory 
+	
+On initial install:
+	git --version - checks the version of the installed locally git
+	git config --global user.name "Your Name" - sets up the name of the user 
+	git config --global user.email "yourname@somemail.eu" - sets up the mail of the user
+	git config --list - lists all the git configurations
+	
+For help on commands:
+	git help <verb> (e.g. git help config) OR 
+	git <verb> --help 
+	
+For initializing the project:
+	git init - initializes the git repo in the current folder
+	touch .gitignore - creates a git ignore file
+	git status - check working tree - both on the git and on local 
+
+Add files:
+	git add -A - adds all of the files for commiting
+	remember - git status - to check the state of the repo 
+	
+Remove files: 
+	git reset - removes files to be commited 
+	git reset somefile.js - removes somefile.js from the commit preparation
+	
+Committing:
+	git commit -m "This is the commit message" - -m is used to add message
+	
+Check log:
+	git log - renders commit ids, authors, dates
+	
+Clone a remote repo:
+	git clone <url> <where to clone>
+
+View info about the repo:
+	git remote -v - lists infor about the repo
+	git branch -a - lists all of the branches
+
+View changes:
+	git diff - shows the difference made in the files
+	
+Pull before push ALWAYS:
+	git pull origin master
+	
+THEN PUSH:
+	git push origin master - <origin> name of remote repo <master> the branch that we push to 
+	
+First time push of the branch:
+	git push -u origin <name of the branch> - -u coordinates the two branches (local and on server)
+	
+Create a branch:
+	git branch <name of the branch>
+
+Checkout a branch:
+	git checkout <name of the branch>
+
+Merge a branch:
+	git checkout master
+	git pull origin master
+	git branch --merged - see which branches are merged 
+	git merge <name of the branch you want to merge>
+	git push origin master 
+
+Delete a branch:
+	git branch -d <name of the branch> - this deletes it locally!!!
+	git branch -a - check the repo branches 
+	git push origin --delete <name of the branch> - this deletes it from the repo!
+
+if you are in the master branch and do some changes, and if you do not want that changes you can create another branch which won't be having those changes
+(these changes have not been added) 
+ex: 
+do some changes in master branch, if you dont want it just checkout new branch, things will be as it is like before.
+
+
+amend commit:
+
+if you have added a wrong message you can modify previous commit message 
+git log
+git commit --amend -m "new message"
+git log
+
+git cherry-pick:
+if you want to add perticular commit from feature branch to master
+git log (and copy 6-7 letters from the perticular commit)
+git checkout master
+git cherry-pick id(hash from commit)
+git log (u will see one more commit)
+
+note:cherry-pick dont delete the original one
+
+git reset: sof mixed hard
+
+soft: do not put files back into the staging
+git log (copy any one commit hash)
+git reset --soft (hash)
+
+mixed: by default, put files in untracked(staging)
+git log (copy any one commit)
+git reset (hash)
+
+hard: reverse back to the things which were earlier
+git log
+git reset --hard hash
+
+
+to delete all untrackedfiles:
+git clean -df
+
+to see all the commit logs:
+git reflog
+
+by using reflog you can undo the reset(anytype)
+git checkout (hash from reflog) #will take you back to that commit 
+git branch namesomething (this will create kind of backup branch for this commit)
+
+
+git stash command:
+
+to save the done work without adding or commiting anything
+git stash save "message string just to remember the work around"
+git stash list
+
+to apply those changes back you can give 
+git stach apply (stachid)  from git stash list
+
+note: it wont delete the stash
+
+or git stash pop (last saved stash will be aplied and it will be deleted)
+
+git stash drop (id from git stash list) #will drop the stash
+git stash clear  #will remove all the stashs
+
+scenario: 
+you are in master and made some feature but instead of addidng it to master you want to add it to feature branch
+all you have to do is save the stash, checkout the branch and pop the stash, add commit push.
+
+git checkout master #did some changes here
+git stash save "did the change"
+git status #showing nothing
+git checkout branchname
+git stash pop 
+git diff or git status
+git addgit commit -m "did some change"
+
+
+git diff and merge tools
+
+
+signing 
+https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work#_signing
+
+
+git-conflict
+example: merging from branch, to master will probably get u conflict
+
+Git commands that can help resolve merge conflicts
+General tools
+git status
+The status command is in frequent use when a working with Git and during a merge it will help identify conflicted files.
+
+git log --merge
+Passing the --merge argument to the git log command will produce a log with a list of commits that conflict between the merging branches.
+
+git diff
+diff helps find differences between states of a repository/files. This is useful in predicting and preventing merge conflicts.
+
+Tools for when git fails to start a merge
+git checkout
+checkout can be used for undoing changes to files, or for changing branches
+
+git reset --mixed
+reset can be used to undo changes to the working directory and staging area.
+
+Tools for when git conflicts arise during a merge
+git merge --abort
+Executing git merge with the --abort option will exit from the merge process and return the branch to the state before the merge began.
+
+git reset
+Git reset can be used during a merge conflict to reset conflicted files to a know good state
+
+Summary
+Merge conflicts can be an intimidating experience. Luckily, Git offers powerful tools to help navigate and resolve conflicts. Git can handle most merges on its own with automatic merging features. A conflict arises when two separate branches have made edits to the same line in a file, or when a file has been deleted in one branch but edited in the other. Conflicts will most likely happen when working in a team environment.
+
+
+
+git upstream and origin:
+
+https://stackoverflow.com/questions/9257533/what-is-the-difference-between-origin-and-upstream-on-github
+
+https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
+
+gitflow-workflow:
+
+https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+
+merge - rebase:
+
+https://www.atlassian.com/git/tutorials/rewriting-history/git-rebase
+
+https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+
+https://www.atlassian.com/git/tutorials/merging-vs-rebasing#the-golden-rule-of-rebasing
+
+it’s usually a good idea to clean up your code with an interactive rebase before submitting your pull request.
+
+
+
+example:
+
+===Rebasing===
+
+Goals
+Use the rebase command rather than the merge command.
+Ok, we are back in time before the first merge and we want to get the changes in master into our greet branch.
+
+This time we will use the rebase command instead of the merge command to bring in the changes from the master branch.
+
+EXECUTE:
+git checkout greet
+git rebase master
+git hist
+OUTPUT:
+$ go greet
+Switched to branch 'greet'
+$
+$ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: added Greeter class
+Applying: hello uses Greeter
+Applying: updated Rakefile
+$
+$ git hist
+* e0cc19e 2020-06-20 | Updated Rakefile (HEAD -> greet) [Jim Weirich]
+* 046088a 2020-06-20 | Hello uses Greeter [Jim Weirich]
+* 3db0ffe 2020-06-20 | Added greeter class [Jim Weirich]
+* 8d90176 2020-06-20 | Added README (master) [Jim Weirich]
+* 5aec14d 2020-06-20 | Added a Rakefile. [Jim Weirich]
+* 721b979 2020-06-20 | Moved hello.rb to lib [Jim Weirich]
+* 907a445 2020-06-20 | Add an author/email comment [Jim Weirich]
+* 4254c94 2020-06-20 | Added a comment (tag: v1) [Jim Weirich]
+* c8b3af1 2020-06-20 | Added a default value (tag: v1-beta) [Jim Weirich]
+* 30c2cd4 2020-06-20 | Using ARGV [Jim Weirich]
+* 4445720 2020-06-20 | First Commit [Jim Weirich]
+Merge VS Rebase
+The final result of the rebase is very similar to the merge. The greet branch now contains all of its changes, as well as all the changes from the master branch. However, the commit tree is quite different. The commit tree for the greet branch has been rewritten so that the master branch is a part of the commit history. This leaves the chain of commits linear and much easier to read.
+
+When to Rebase, When to Merge?
+Don’t use rebase …
+
+If the branch is public and shared with others. Rewriting publicly shared branches will tend to screw up other members of the team.
+When the exact history of the commit branch is important (since rebase rewrites the commit history).
+Given the above guidelines, I tend to use rebase for short-lived, local branches and merge for branches in the public repository.
+
+===Merging Back to Master===
+Goals
+We’ve kept our greet branch up to date with master (via rebase), now let’s merge the greet changes back into the master branch.
+Merge greet into master
+EXECUTE:
+git checkout master
+git merge greet
+OUTPUT:
+$ git checkout master
+Switched to branch 'master'
+$
+$ git merge greet
+Updating 8d90176..e0cc19e
+Fast-forward
+ Rakefile       | 2 +-
+ lib/greeter.rb | 8 ++++++++
+ lib/hello.rb   | 6 ++++--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+ create mode 100644 lib/greeter.rb
+Because the head of master is a direct ancestor of the head of the greet branch, git is able to do a fast-forward merge. When fast-forwarding, the branch pointer is simply moved forward to point to the same commit as the greeter branch.
+
+There will never be conflicts in a fast-forward merge.
+
+
+
+fetching changes:
+
+https://gitimmersion.com/lab_42.html
+

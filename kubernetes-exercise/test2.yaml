@@ -1,0 +1,18 @@
+--- 
+apiVersion: batch/v1
+kind: Job
+metadata: 
+  name: create-client-job
+spec: 
+  backoffLimit: 5
+  template: 
+    spec: 
+      containers: 
+        - 
+          args: 
+            - "clients create --endpoint http://127.0.0.1:4445 --id gitea-client --secret secret --grant-types authorization_code,refresh_token --response-types code,id_token --scope openid,offline --callbacks http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback"
+          command: 
+            - hydra
+          image: "oryd/hydra:v1.7.4"
+          name: create-client
+      restartPolicy: Never

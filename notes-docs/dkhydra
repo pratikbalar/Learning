@@ -1,0 +1,401 @@
+version: '3'
+
+networks:
+  hydraguide:
+    external: true
+
+
+services:
+
+  hydra:
+    image: oryd/hydra:v1.7.4
+    ports:
+      - "4444:4444" # Public port
+      - "4445:4445" # Admin port
+      - "5555:5555" # Port for hydra token user
+    command:
+      serve all --dangerous-force-http
+    environment:
+      - URLS_SELF_ISSUER=http://127.0.0.1:4444
+      - URLS_CONSENT=http://127.0.0.1:3000/consent
+      - URLS_LOGIN=http://127.0.0.1:3000/login
+      - URLS_LOGOUT=http://127.0.0.1:3000/logout
+      - DSN=memory
+      - SECRETS_SYSTEM=youReallyNeedToChangeThis
+      - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
+      - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis
+      - SERVE_COOKIES_SAME_SITE_MODE=Lax
+    restart: unless-stopped
+
+  consent:
+    environment:
+      - HYDRA_ADMIN_URL=http://hydra:4445
+    image: oryd/hydra-login-consent-node:v1.5.2
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  server:
+    image: gitea/gitea:latest
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - hydraguide
+    volumes:
+      - ./gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8080:3000"
+      - "2228:22"
+
+      
+     
+docker-compose -f hydrastart.yml \
+    -f hydrastart-postgres.yml \
+    up --build      
+    
+ 
+docker-compose -f hydrastart.yml exec hydra \
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445/ \
+    --id my-client \
+    --secret secret \
+    -g client_credentials 
+    
+sudo docker-compose -f hydrastart.yml exec hydra \
+    hydra token client \
+    --endpoint http://127.0.0.1:4444/ \
+    --client-id my-client \
+    --client-secret secret 
+
+
+docker-compose -f hydrastart.yml exec hydra \
+    hydra token introspect \
+    --endpoint http://127.0.0.1:4445/ chkf7qH70Ts-Q6H7_1uqP3NYRqdHK_BG17Vh8ZaxZF0.vd73Rc1SM4OdNGAqeZJV9T7BrjFMHi85AZW9Rkg12gw
+
+
+
+
+docker-compose -f hydrastart.yml exec hydra \
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445 \
+    --id auth-code-client \
+    --secret secret \
+    --grant-types authorization_code,refresh_token \
+    --response-types code,id_token \
+    --scope openid,offline \
+    --callbacks http://brucebanner:5555/callback
+    
+    		-------	or -----
+    		
+docker-compose -f hydrastart.yml exec hydra \
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445 \
+    --id gitea-client \
+    --secret secret \
+    --grant-types authorization_code,refresh_token \
+    --response-types code,id_token \
+    --scope openid,offline \
+    --callbacks http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback
+    
+          
+docker-compose -f hydrastart.yml exec hydra \
+    hydra token user \
+    --client-id gitea-client \
+    --client-secret secret \
+    --endpoint http://127.0.0.1:4444/ \
+    --port 5555 \
+    --scope openid,offline
+
+
+--auth-url http://127.0.0.1:4444/oauth2/auth \
+	--token-url http://hydra:4444/oauth2/token \
+--redirect http://127.0.0.1:8080/user/oauth2/callback \
+
+authjorization url
+http://127.0.0.1:8080/login/oauth2/authorize
+
+--redirect http://127.0.0.1:8000/user/oauth2/hey/callback \
+http://mgmt.example.com/git/user/oauth2/github(name you given)/callback
+callback -- http://127.0.0.1:8080/user/oauth2/openid/callback
+
+debugging---   
+    docker-compose -f hydrastart.yml exec hydra \
+    hydra clients get \
+    --endpoint http://hydra:4445/  auth-code-client \     
+
+well-kniown url
+	http://127.0.0.1:4444/.well-known/openid-configuration
+
+ 
+debug  -- change callback also with hostname 
+
+
+docker-compose -f hydrastart.yml exec hydra \
+    hydra token user --help\
+    
+    
+    
+    
+docker-compose -f hydrastart.yml exec hydra \
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445 \
+    --id my-client \
+    --secret secret \
+    --grant-types authorization_code,refresh_token \
+    --response-types code,id_token,email \
+    --scope openid,offline_access,profile,email \
+    --callbacks http://gitea.example.com:8000/users/auth/ORY_Hydra/callback \
+    --token-endpoint-auth-method client_secret_post    
+    
+    
+    
+    
+    zsh
+sublime
+12factor.net
+
+token baba token 8a0514088d55836fa545664dc639e7456e57fee3
+
+ git 
+ github   
+    
+    
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445 \
+    --id gitea-client \
+    --secret secret \
+    --grant-types authorization_code,refresh_token \
+    --response-types code,id_token \
+    --scope openid,offline \
+    --callbacks http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback \
+    --token-endpoint-auth-method client_secret_post
+    
+    docker-compose -f hydrastart.yml exec hydra \
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445 \
+    --id gitea-client \
+    --secret secret \
+    --grant-types authorization_code,refresh_token \
+    --response-types code,id_token \
+    --scope openid,offline \
+    --callbacks http://127.0.0.1:8000/user/oauth2/ORY_Hydra/callback \
+    --token-endpoint-auth-method client_secret_post
+
+
+nginx configs
+
+https://gist.github.com/soheilhy/8b94347ff8336d971ad0
+
+unlink /etc/nginx/conf.d/app.conf 
+ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf   ## set symbolic link to the conf file
+# service nginx configtest
+# service nginx restart
+
+sudo nginx -c conf -t 
+
+hydrastart line 24 serve all --dangerous-allow-insecure-redirect-urls http://gitea.example.dk/user/oauth2/ORY_Hydra/callback
+
+docker-compose -f hydrastart.yml \
+    -f hydrastart-postgres.yml \
+    up --build 
+    
+docker-compose -f hydrastart.yml exec hydra \
+    hydra clients create  \
+    --endpoint http://hydra:4445 \
+    --id gitea-client \
+    --secret secret \
+    --grant-types authorization_code,refresh_token \
+    --response-types code,id_token \
+    --scope openid,offline \
+    --callbacks http://gitea.localhost/user/oauth2/ORY_Hydra/callback
+    
+    
+          
+docker-compose -f hydrastart.yml exec hydra \
+    hydra token user \
+    --client-id gitea-client \
+    --client-secret secret \
+    --endpoint http://hydra:4444/ \
+    --port 5555 \
+    --scope openid,offline 
+    
+    
+    \
+    --auth-url http://hydra.localhost/oauth2/auth \
+	  --token-url http://hydra:4444/oauth2/token 
+    
+
+docker exec -it (gitea id) bash
+
+gitea manager logging add console --stderr --flags stdflags file
+
+gitea manager logging add console enable_access_log --stderr --flags stdflags file
+
+
+
+
+kubernetes:
+
+
+kubernetes apis
+how many types and what they do
+
+cat > kubernetes.default.svc.cluster.local <<EOF
+server {
+  listen      80;
+  server_name kubernetes.default.svc.cluster.local;
+
+  location /healthz {
+     proxy_pass                    https://127.0.0.1:6443/healthz;
+     proxy_ssl_trusted_certificate /var/lib/kubernetes/ca.pem;
+  }
+}
+EOF
+{
+  sudo mv kubernetes.default.svc.cluster.local \
+    /etc/nginx/sites-available/kubernetes.default.svc.cluster.local
+
+  sudo ln -s /etc/nginx/sites-available/kubernetes.default.svc.cluster.local /etc/nginx/sites-enabled/
+}
+
+
+Start the Kubernetes Proxy:
+$ kubectl proxy --port=8080
+Now, you can navigate through the Kubernetes API to access this service using this scheme:
+http://localhost:8080/api/v1/proxy/namespaces/<NAMESPACE>/services/<SERVICE-NAME>:<PORT-NAME>/
+So to access the service we defined above, you could use the following address:
+http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
+
+
+volumes 
+configmap
+secret
+rbac
+role binding
+
+
+=======================================================
+OS fundamendtals
+
+how does it work and how it comes up and set some process which comes up once os is up
+
+
+the foreman
+
+freeipi
+
+=====================  BIOS and UEFI  ===========
+
+BIOS and UEFI are two firmware interfaces for computers which work as an interpreter between the operating system and the computer firmware. 
+Both of these interfaces are used at the startup of the computer to initialize the hardware components and start the operating system which is stored on the hard drive.
+
+UEFI vs. BIOS, which one is better and which one you should use? It’s a good question for anyone who wants to find out how the underlying hardware works so they can personalizing the nuts and bolts of their personal computers. In short, UEFI is newer, better and comes loaded on most modern PC. But things are not as simple as black and white. Here’s a rundown of the functionalities both UEFI and BIOS provide and why you might choose one over the other.
+
+The basics
+BIOS and UEFI are two firmware interfaces for computers which work as an interpreter between the operating system and the computer firmware. Both of these interfaces are used at the startup of the computer to initialize the hardware components and start the operating system which is stored on the hard drive.
+
+
+ 
+=Uefi Or Legacy Bios Boot=
+
+ 
+BIOS (Basic Input Output System) works by reading the first sector of the hard drive which has the next device’s address to initialize or code to execute. 
+BIOS also selects the boot device that needs to be initialized for starting the operating system. 
+
+UEFI (Unified Extensible Firmware Interface) does the same task a little differently. 
+It stores all the information about initialization and startup in an .efi file instead of the firmware. 
+This file is stored on the hard drive inside a special partition called EFI System Partition (ESP). 
+The ESP partition also contains the boot loader programs for the Operating System installed on the computer.
+
+UEFI vs. BIOS, which one is better and which one you should use? It’s a good question for anyone who wants to find out how the underlying hardware works so they can personalizing the nuts and bolts of their personal computers. In short, UEFI is newer, better and comes loaded on most modern PC. But things are not as simple as black and white. Here’s a rundown of the functionalities both UEFI and BIOS provide and why you might choose one over the other.
+
+The basics
+BIOS and UEFI are two firmware interfaces for computers which work as an interpreter between the operating system and the computer firmware. Both of these interfaces are used at the startup of the computer to initialize the hardware components and start the operating system which is stored on the hard drive.
+
+
+ 
+Uefi Or Legacy Bios Boot
+
+ 
+BIOS (Basic Input Output System) works by reading the first sector of the hard drive which has the next device’s address to initialize or code to execute. BIOS also selects the boot device that needs to be initialized for starting the operating system. Since BIOS has been in use since the very beginning (it exists since the MS-DOS era), it still works in 16-bit mode, limiting the amount of code that can be read and executed from the firmware ROM.
+
+UEFI (Unified Extensible Firmware Interface) does the same task a little differently. It stores all the information about initialization and startup in an .efi file instead of the firmware. This file is stored on the hard drive inside a special partition called EFI System Partition (ESP). The ESP partition also contains the boot loader programs for the Operating System installed on the computer.
+
+UEFI is meant to completely replace BIOS and bring in many new features and enhancements that can’t be implemented through BIOS. Some of those features are discussed below.
+
+UEFI enables better use of bigger hard drives. Though UEFI supports the traditional master boot record (MBR) method of hard drive partitioning, it doesn't stop there. 
+It's also capable of working with the GUID Partition Table (GPT), which is free of the limitations the MBR places on the number and size of partitions. 
+GPT ups the maximum partition size from 2.19TB to 9.4 zettabytes.
+ 
+Breaking out of size limitations
+BIOS uses the Master Boot Record (MBR) to save information about the hard drive data while UEFI uses the GUID partition table (GPT). 
+The major difference between the two is that MBR uses 32-bit entries in its table which limits the total physical partitions to only 4. 
+Each partition can only be a maximum of 2TB in size, while GPT uses 64-bit entries in its table which dramatically extends the support for size possibilities of the hard drive.
+
+Speed and performance
+Since UEFI is platform independent, it may be able to enhance the boot time and speed of the computer. 
+
+Security
+The biggest benefit of UEFI is its security over BIOS. UEFI can allow only authentic drivers and services to load at boot time, making sure that no malware can be loaded at computer startup. 
+
+=================================================================================================================================
+
+==================  The Purpose of the Page File or Swap Partition    ====================================
+
+
+First, let’s remember the real purpose of the page file on Windows or swap partition on Linux. Both provide additional working memory to your computer. 
+For example, if your computer has 2 GB of RAM and you open a large number of programs or large number of files, your computer might need to store 3 GB of data in its working memory. 
+The computer stores that additional 1 GB of data in its page file or swap space. The page file or swap acts as an “overflow” area to hold the additional data. 
+Your computer automatically transfers data back to its RAM when it’s being used, and moves data to its page file or swap partition when it’s not being used.
+
+Linux Hibernation: On Linux systems, hibernate — the power-down state that saves the contents of your system’s RAM to disk so it can be reloaded when you boot up again — 
+saves the contents of the system’s RAM to the swap partition.
+
+On Linux, the equivalent to the Windows paging file is the swap partition. 
+Because this is a partition and not just a file, you have to make a choice about the size of your swap partition when installing Linux. 
+Sure, you could resize your partitions later — but that’s more work. Linux can’t automatically manage the size of your swap partition for you.
+
+If you’re manually partitioning in your Linux installer, the size of your RAM plus .5 GB is a good rule of thumb that will ensure you can actually hibernate your system.
+
+=============note: =============
+
+The ESP (efi system partition) acts like a "boot partition" did for MBR systems.  This ESP can be mounted *anywhere* once a system is running - in fact it doesn't need to be mounted at all!  
+It does need to be mounted in order to update the kernel and initramfs stored in it, but other than that mounting it is not necessary.
+
+Our wiki recommends mounting the ESP to the /boot directory of the filesystem.  This way when pacman installs a new kernel and builds a new initramfs they'll already be in the right place.
+
+If you want to mount the ESP to /boot/efi (or anywhere else), then you should not have another "boot partition".  
+In these cases, /boot is just a directory on the main partition (also called the "root" partition, though this brings in more ambiguous terminology).  
+In other words the ESP is your boot partition.  Whether or not you mount this on /boot or somewhere else is up to you - but there should be no other boot partition*.
+
+
+(*note: strictly speaking it is possible to have another partition for /boot, but it would serve no purpose that I could imagine.  
+It'd be possible, but completely pointless.  I can't imagine any distro would ever recommend it).
+
+
+========On the confusion of why we choose fat32 /boot/efi
+On a normal hard disk installation of most any EFI-based OS, you'll have, at a minimum, one FAT EFI System Partition (ESP) and one partition for the OS itself. 
+The ESP holds a boot loader for the OS, possibly along with files to support the boot loader (fonts, configuration files, drivers, etc.), and possibly even the OS's kernel. 
+The OS partition holds more-or-less the same OS files you'd find on a BIOS-based installation of the same OS. 
+Depending on the OS, you might have additional partitions, too -- data partitions, a swap partition, etc
+
+Note that a standard EFI can read FAT, but cannot read NTFS, ext2/3/4fs, HFS+, or any other filesystem.
+(Apple's EFI can read HFS+, and so can read its boot loader from a Mac OS X root partition rather than from the ESP, 
+but Apple's EFI is the exception rather than the rule. A few EFIs also have ISO-9660 filesystem drivers -- but again, they're exceptions to the rule.) 
+Because FAT is the only filesystem that's guaranteed to be readable by EFI, an attempt to build a boot disk that does not include a FAT partition is doomed to failure, 
+except of course when used on those unusual EFIs that support additional filesystems.
+
+=======================================================================================================================================================================================
+
+=============================================  Foreman  ============================
+
+
+=====================  kubernetes ==========================
+
+dns for any service name my-svc is my-svc.my-namespace.svczone
+
+my-svc.my-namespace.svc.cluster-domain.example
