@@ -15,5 +15,4 @@ docker-compose -f hydrastart.yml \
     hydra token client \
     --endpoint http://127.0.0.1:4444/ \
     --client-id my-client \
-    --client-secret secret  ```
-
+    --client-secret secret  
