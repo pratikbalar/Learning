@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-consent
+spec:
+  selector:
+    matchLabels:
+      run: my-consent-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-consent-pod
+    spec:
+      containers:
+      - name: my-consent-container
+        image: oryd/hydra-login-consent-node:v1.5.2
+        ports:
+        - containerPort: 3000
+        env:
+        - name: HYDRA_ADMIN_URL
+          value: "http://my-hydra-service.default.svc.cluster.local:4445"
+      restartPolicy: Always
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-consent-service
+  labels:
+    run: my-consent-pod
+spec:
+  #type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+    #nodePort: 30001
+  selector:
+    run: my-consent-pod

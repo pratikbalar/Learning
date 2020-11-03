@@ -1,0 +1,9 @@
+Start K3s with the --disable traefik option. You can do this by editing /etc/systemd/system/k3s.service and editing the ExecStart line:
+
+ExecStart=/usr/local/bin/k3s \
+server \
+--disable traefik \
+Restart K3s
+
+sudo systemctl daemon-reload
+sudo systemctl restart k3s.service

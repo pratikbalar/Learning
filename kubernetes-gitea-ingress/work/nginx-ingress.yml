@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: hello-kubernetes-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: gitea.localhost
+    http:
+      paths:
+      - backend:
+          serviceName: my-gitea-service
+          servicePort: 80
+  - host: consent.localhost
+    http:
+      paths:
+      - backend:
+          serviceName: my-consent-service
+          servicePort: 80
+  - host: hydra.localhost
+    http:
+      paths:
+      - backend:
+          serviceName: my-hydra-service
+          servicePort: 80
+

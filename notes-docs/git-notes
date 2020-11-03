@@ -291,3 +291,9 @@ fetching changes:
 
 https://gitimmersion.com/lab_42.html
 
+
+just incase you find error
+
+Git error: “Please make sure you have the correct access rights and the repository exists”
+
+git remote set-url origin git@yourGitUrlHere
