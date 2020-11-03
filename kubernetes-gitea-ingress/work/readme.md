@@ -1,3 +1,9 @@
+Installation
+
+```localhost  ==>  gitea.localhost```
+```3000  ==> 3000```
+```http://localhost:3000  ==> http://gitea.localhost/```
+
 ```name ORY_Hydra```
 
 
