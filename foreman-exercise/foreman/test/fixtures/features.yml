@@ -1,0 +1,27 @@
+---
+dns:
+  name: DNS
+
+tftp:
+  name: TFTP
+
+dhcp:
+  name: DHCP
+
+puppetca:
+  name: Puppet CA
+
+puppet:
+  name: Puppet
+
+bmc:
+  name: BMC
+
+chefproxy:
+  name: Chef Proxy
+
+realm:
+  name: Realm
+
+logs:
+  name: Logs

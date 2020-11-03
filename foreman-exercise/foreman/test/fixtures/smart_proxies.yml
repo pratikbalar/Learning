@@ -1,0 +1,32 @@
+---
+one:
+  name: DHCP Proxy
+  url: https://somewhere.net:8443
+
+two:
+  name: TFTP Proxy
+  url: http://somewhere.else
+
+three:
+  name: DNS Proxy
+  url: http://else.where:45671
+
+puppetmaster:
+  name: Puppetmaster Proxy
+  url: http://else.where:4567
+
+realm:
+  name: Realm Proxy
+  url: http://else.where:1337
+
+four:
+  name: Unused Proxy
+  url: http://else.where:45672
+
+bmc:
+  name: BMC proxy
+  url: http://else.where:45673
+
+logs:
+  name: A proxy with Logs feature
+  url: http://else.where:45674

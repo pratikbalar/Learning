@@ -1,0 +1,8 @@
+<% title(_("Login")) %>
+
+<%= content_for(:content) do %>
+  <%= notifications %>
+  <%= yield %>
+<% end %>
+
+<%= render :template => 'layouts/base' %>

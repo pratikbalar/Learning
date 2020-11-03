@@ -1,0 +1,24 @@
+---
+one:
+  name: base
+
+two:
+  name: apache
+
+three:
+  name: git
+
+four:
+  name: vim
+
+five:
+  name: nagios
+
+six:
+  name: chkmk
+
+seven:
+  name: pam
+
+eight:
+  name: auth

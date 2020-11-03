@@ -1,0 +1,4 @@
+---
+one:
+  host: one
+  puppetclass: one

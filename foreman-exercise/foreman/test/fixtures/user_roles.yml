@@ -1,0 +1,24 @@
+---
+user_restricted_viewer_role:
+  owner: restricted
+  role_id: 5
+
+user_restricted_default_role:
+  owner: restricted
+  role_id: 7
+
+user_restricted_manage_hosts_role:
+  owner: restricted
+  role_id: 12
+
+user_restricted_manage_compute_resources:
+  owner: restricted
+  role_id: 11
+
+user_view_hosts_view_hosts:
+  owner: view_hosts
+  role_id: 3
+
+user_system_admin_system_admin:
+  owner: system_admin
+  role_id: 14

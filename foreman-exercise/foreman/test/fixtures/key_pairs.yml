@@ -1,0 +1,5 @@
+---
+one:
+  secret: KeyKeyKey_PrivatE_key
+  compute_resource_id: one
+  name: MyString

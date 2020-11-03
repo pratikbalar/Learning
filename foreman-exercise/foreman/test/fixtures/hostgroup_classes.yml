@@ -1,0 +1,12 @@
+---
+one:
+  puppetclass: one
+  hostgroup: common
+
+two:
+  puppetclass: four
+  hostgroup: db
+
+three:
+  puppetclass: three
+  hostgroup_id: 1

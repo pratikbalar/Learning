@@ -1,0 +1,12 @@
+---
+one:
+  name: 1-Small
+
+two:
+  name: 2-Medium
+
+three:
+  name: 3-Large
+
+four:
+  name: 4-Networking

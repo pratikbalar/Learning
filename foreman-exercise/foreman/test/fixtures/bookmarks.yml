@@ -1,0 +1,18 @@
+---
+one:
+  name: "foo"
+  query: "foo=boo"
+  public: true
+  controller: "hosts"
+
+two:
+  name: "bar"
+  query: "bar=car"
+  public: false
+  controller: "hosts"
+
+three:
+  name: "three"
+  query: "three"
+  public: true
+  controller: "hosts"

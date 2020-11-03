@@ -1,0 +1,36 @@
+---
+config_summary:
+  name: config_summary
+  description: config summary
+  mailer: HostMailer
+  method: summary
+  subscription_type: report
+
+config_error_state:
+  name: config_error_state
+  description: A notification when a host reports a config error
+  mailer: HostMailer
+  method: error_state
+  subscription_type: alert
+  type: ConfigManagementError
+
+welcome:
+  name: welcome
+  description: Welcome mail
+  mailer: UserMailer
+  method: welcome
+  subscriptable: false
+
+host_built:
+  name: host_built
+  description: A notification when a host finishes building
+  mailer: HostMailer
+  method: host_built
+  subscription_type: alert
+
+tester:
+  name: tester
+  description: Test email configurations
+  mailer: UserMailer
+  method: tester
+  subscriptable: false

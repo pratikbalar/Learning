@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Default Empty State should render documentation when given a url 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(Symbol.observable): [Function],
+    }
+  }
+>
+  <DefaultEmptyState
+    description="Printers print a file from the computer"
+    documentation={
+      Object {
+        "url": "https://example.com",
+      }
+    }
+    header="Printers"
+    icon="printer"
+    iconType="pf"
+    secondaryActions={Array []}
+  />
+</Provider>
+`;
+
+exports[`Default Empty State should render secondary actions 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(Symbol.observable): [Function],
+    }
+  }
+>
+  <DefaultEmptyState
+    description="Printers print a file from the computer"
+    documentation={
+      Object {
+        "url": "https://example.com",
+      }
+    }
+    header="Printers"
+    icon="printer"
+    iconType="pf"
+    secondaryActions={Array []}
+  />
+</Provider>
+`;
+
+exports[`Empty State Pattern should render with props 1`] = `
+<EmptyState
+  variant="xl"
+>
+  <span
+    className="empty-state-icon"
+  >
+    <Icon
+      name="printer"
+      size="2x"
+      type="pf"
+    />
+  </span>
+  <Title
+    headingLevel="h5"
+    size="4xl"
+  >
+    Printers
+  </Title>
+  <EmptyStateBody>
+    <div
+      className="empty-state-description"
+    >
+      Printers print a file from the computer
+    </div>
+    <DocumentationBlock />
+  </EmptyStateBody>
+  <EmptyStateSecondaryActions />
+</EmptyState>
+`;

@@ -1,0 +1,8 @@
+---
+one:
+  domain: mydomain
+  subnet: one
+
+two:
+  domain: yourdomain
+  subnet: two
