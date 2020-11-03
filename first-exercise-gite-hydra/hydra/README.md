@@ -1,5 +1,5 @@
-     
-``` docker-compose -f hydrastart.yml \
+```     
+docker-compose -f hydrastart.yml \
     -f hydrastart-postgres.yml \
     up --build ```
     
