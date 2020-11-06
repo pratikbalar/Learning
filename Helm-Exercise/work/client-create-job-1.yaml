@@ -53,4 +53,4 @@ spec:
       #   --client-id my-client \
       #   --client-secret secret
 
-change your endpoints as per the need
+#change your endpoints as per the need

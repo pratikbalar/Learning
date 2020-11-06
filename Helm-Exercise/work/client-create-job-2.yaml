@@ -50,3 +50,5 @@ spec:
       #   --endpoint http://public.hydra.localhost/ \
       #   --client-id my-client \
       #   --client-secret secret
+
+#change your endpoints as per the need
