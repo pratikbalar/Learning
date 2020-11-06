@@ -21,3 +21,6 @@ spec:
   #change endpoint with service endpoint
   #my-gitea-service.default.svc.cluster.local
   #my-hydra-service.default.svc.cluster.local
+
+
+  ##NOTE: better option would be you install ory hydra locally and run these commands, anyway here we have hard coded all the things.

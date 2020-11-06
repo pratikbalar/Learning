@@ -19,3 +19,6 @@ spec:
   
   #create 2 two jobs for two commands
   #change endpoint with service endpoint
+
+
+  ##NOTE: better option would be you install ory hydra locally and run these commands, anyway here we have hard coded all the things.
