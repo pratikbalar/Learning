@@ -43,12 +43,14 @@ spec:
 # to 
 
       # $ hydra clients create \
-      #   --endpoint http://admin.hydra.localhost/ \
+      #   --endpoint http://my-hydra-service.default.svc.cluster.local:4445 \
       #   --id my-client \
       #   --secret secret \
       #   -g client_credentials
     
       # $ hydra token client \
-      #   --endpoint http://public.hydra.localhost/ \
+      #   --endpoint http://hydra.localhost/ \
       #   --client-id my-client \
       #   --client-secret secret
+
+change your endpoints as per the need
