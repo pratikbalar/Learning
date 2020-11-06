@@ -1,0 +1,264 @@
+Helm
+
+Three Big Concepts
+A Chart is a Helm package. It contains all of the resource definitions necessary to run an application, tool, or service inside of a Kubernetes cluster. 
+Think of it like the Kubernetes equivalent of a Homebrew formula, an Apt dpkg, or a Yum RPM file.
+
+A Repository is the place where charts can be collected and shared. It's like Perl's CPAN archive or the Fedora Package Database, but for Kubernetes packages.
+
+A Release is an instance of a chart running in a Kubernetes cluster. One chart can often be installed many times into the same cluster. 
+And each time it is installed, a new release is created. Consider a MySQL chart. If you want two databases running in your cluster, you can install that chart twice. 
+Each one will have its own release, which will in turn have its own release name.
+
+With these concepts in mind, we can now explain Helm like this:
+
+Helm installs charts into Kubernetes, creating a new release for each installation. And to find new charts, you can search Helm chart repositories.
+
+==================================================================================
+
+'helm search': Finding Charts
+
+helm search hub searches the Artifact Hub, which lists helm charts from dozens of different repositories.
+
+helm search repo searches the repositories that you have added to your local helm client (with helm repo add). This search is done over local data, and no public network connection is needed.
+
+
+'helm install': Installing a Package
+
+helm install command. At its simplest, it takes two arguments: A release name that you pick, and the name of the chart you want to install.
+ex: helm install happy-panda stable/mariadb
+
+
+Customizing the Chart Before Installing
+Installing the way we have here will only use the default configuration options for this chart. Many times, you will want to customize the chart to use your preferred configuration.
+
+To see what options are configurable on a chart, use helm show values:
+
+You can then override any of these settings in a YAML formatted file, and then pass that file during installation.
+
+$ echo '{mariadbUser: user0, mariadbDatabase: user0db}' > config.yaml
+$ helm install -f config.yaml stable/mariadb --generate-name
+
+The above will create a default MariaDB user with the name user0, and grant this user access to a newly created user0db database, but will accept all the rest of the defaults for that chart.
+
+There are two ways to pass configuration data during install:
+
+--values (or -f): Specify a YAML file with overrides. This can be specified multiple times and the rightmost file will take precedence
+--set: Specify overrides on the command line.
+
+The --set option takes zero or more name/value pairs. At its simplest, it is used like this: --set name=value. The YAML equivalent of that is:
+
+name: value
+
+
+'helm uninstall': Uninstalling a Release
+
+You can see all of your currently deployed releases with the helm list command:
+
+If you wish to keep a deletion release record, use helm uninstall --keep-history. 
+Using helm list --uninstalled will only show releases that were uninstalled with the --keep-history flag.
+
+
+'helm repo': Working with Repositories
+
+And new repositories can be added with helm repo add:
+
+Because chart repositories change frequently, at any point you can make sure your Helm client is up to date by running helm repo update.
+
+Repositories can be removed with helm repo remove.
+
+
+Note that only the last field was overridden.
+
+NOTE: The default values file included inside of a chart must be named values.yaml. But files specified on the command line can be named anything.
+
+NOTE: If the --set flag is used on helm install or helm upgrade, those values are simply converted to YAML on the client side.
+
+NOTE: If any required entries in the values file exist, they can be declared as required in the chart template by using the 'required' function
+
+
+
+We also added two special template functions: include and required. The include function allows you to bring in another template, and then pass the results to other template functions.
+
+For example, this template snippet includes a template called mytpl, then lowercases the result, then wraps that in double quotes.
+
+value: {{ include "mytpl" . | lower | quote }}
+The required function allows you to declare a particular values entry as required for template rendering. If the value is empty, 
+the template rendering will fail with a user submitted error message.
+
+The following example of the required function declares an entry for .Values.who is required, and will print an error message when that entry is missing:
+
+value: {{ required "A valid .Values.who entry required!" .Values.who }}
+
+Quote Strings, Don't Quote Integers
+When you are working with string data, you are always safer quoting the strings than leaving them as bare words:
+
+name: {{ .Values.MyName | quote }}
+But when working with integers do not quote the values. That can, in many cases, cause parsing errors inside of Kubernetes.
+
+port: {{ .Values.Port }}
+This remark does not apply to env variables values which are expected to be string, even if they represent integers:
+
+env:
+  - name: HOST
+    value: "http://host"
+  - name: PORT
+    value: "1234"
+
+
+
+Using the 'include' Function
+Go provides a way of including one template in another using a built-in template directive. However, the built-in function cannot be used in Go template pipelines.
+
+To make it possible to include a template, and then perform an operation on that template's output, Helm has a special include function:
+
+{{ include "toYaml" $value | indent 2 }}
+The above includes a template called toYaml, passes it $value, and then passes the output of that template to the indent function.
+
+Because YAML ascribes significance to indentation levels and whitespace, this is one great way to include snippets of code, but handle indentation in a relevant context.
+
+
+Using the 'required' function
+Go provides a way for setting template options to control behavior when a map is indexed with a key that's not present in the map. This is typically set with template.Options("missingkey=option"), where option can be default, zero, or error. While setting this option to error will stop execution with an error, this would apply to every missing key in the map. There may be situations where a chart developer wants to enforce this behavior for select values in the values.yaml file.
+
+The required function gives developers the ability to declare a value entry as required for template rendering. If the entry is empty in values.yaml, the template will not render and will return an error message supplied by the developer.
+
+For example:
+
+{{ required "A valid foo is required!" .Values.foo }}
+The above will render the template when .Values.foo is defined, but will fail to render and exit when .Values.foo is undefined.
+
+
+
+Using the 'tpl' Function
+The tpl function allows developers to evaluate strings as templates inside a template. This is useful to pass a template string as a value to a chart or render external configuration files. Syntax: {{ tpl TEMPLATE_STRING VALUES }}
+
+Examples:
+
+# values
+template: "{{ .Values.name }}"
+name: "Tom"
+
+# template
+{{ tpl .Values.template . }}
+
+# output
+Tom
+Rendering an external configuration file:
+
+# external configuration file conf/app.conf
+firstName={{ .Values.firstName }}
+lastName={{ .Values.lastName }}
+
+# values
+firstName: Peter
+lastName: Parker
+
+# template
+{{ tpl (.Files.Get "conf/app.conf") . }}
+
+# output
+firstName=Peter
+lastName=Parker
+
+
+
+Tell Helm Not To Uninstall a Resource
+Sometimes there are resources that should not be uninstalled when Helm runs a helm uninstall. Chart developers can add an annotation to a resource to prevent it from being uninstalled.
+
+kind: Secret
+metadata:
+  annotations:
+    "helm.sh/resource-policy": keep
+[...]
+(Quotation marks are required)
+
+The annotation "helm.sh/resource-policy": keep instructs Helm to skip deleting this resource when a helm operation (such as helm uninstall, helm upgrade or helm rollback) 
+would result in its deletion. However, this resource becomes orphaned. Helm will no longer manage it in any way. 
+This can lead to problems if using helm install --replace on a release that has already been uninstalled, but has kept resources.
+
+
+
+Using "Partials" and Template Includes
+Sometimes you want to create some reusable parts in your chart, whether they're blocks or template partials. And often, it's cleaner to keep these in their own files.
+
+In the templates/ directory, any file that begins with an underscore(_) is not expected to output a Kubernetes manifest file. 
+So by convention, helper templates and partials are placed in a _helpers.tpl file.
+
+
+Install or Upgrade a Release with One Command
+Helm provides a way to perform an install-or-upgrade as a single command. Use helm upgrade with the --install command. 
+This will cause Helm to see if the release is already installed. If not, it will run an install. If it is, then the existing release will be upgraded.
+
+$ helm upgrade --install <release name> --values <values file> <chart directory>
+
+
+
+
+Global Values
+
+This provides a way of sharing one top-level variable with all subcharts, which is useful for things like setting metadata properties like labels.
+
+If a subchart declares a global variable, that global will be passed downward (to the subchart's subcharts), but not upward to the parent chart. 
+There is no way for a subchart to influence the values of the parent chart.
+
+Also, global variables of parent charts take precedence over the global variables from subcharts.
+
+
+
+
+Limitations on CRDs
+Unlike most objects in Kubernetes, CRDs are installed globally. For that reason, Helm takes a very cautious approach in managing CRDs. CRDs are subject to the following limitations:
+
+CRDs are never reinstalled. If Helm determines that the CRDs in the crds/ directory are already present (regardless of version), Helm will not attempt to install or upgrade.
+CRDs are never installed on upgrade or rollback. Helm will only create CRDs on installation operations.
+CRDs are never deleted. Deleting a CRD automatically deletes all of the CRD's contents across all namespaces in the cluster. Consequently, Helm will not delete CRDs.
+Operators who want to upgrade or delete CRDs are encouraged to do this manually and with great care.
+
+
+
+Using Helm to Manage Charts
+The helm tool has several commands for working with charts.
+
+It can create a new chart for you:
+
+$ helm create mychart
+Created mychart/
+Once you have edited a chart, helm can package it into a chart archive for you:
+
+$ helm package mychart
+Archived mychart-0.1.-.tgz
+You can also use helm to help you find issues with your chart's formatting or information:
+
+$ helm lint mychart
+No issues found
+
+
+
+Chart Hooks
+Helm provides a hook mechanism to allow chart developers to intervene at certain points in a release's life cycle. For example, you can use hooks to:
+
+Load a ConfigMap or Secret during install before any other charts are loaded.
+Execute a Job to back up a database before installing a new chart, and then execute a second job after the upgrade in order to restore data.
+Run a Job before deleting a release to gracefully take a service out of rotation before removing it.
+Hooks work like regular templates, but they have special annotations that cause Helm to utilize them differently. In this section, we cover the basic usage pattern for hooks.
+
+
+
+Hook resources are not managed with corresponding releases
+The resources that a hook creates are currently not tracked or managed as part of the release. Once Helm verifies that the hook has reached its ready state, 
+it will leave the hook resource alone. Garbage collection of hook resources when the corresponding release is deleted may be added to Helm 3 in the future, 
+so any hook resources that must never be deleted should be annotated with helm.sh/resource-policy: keep.
+
+Practically speaking, this means that if you create resources in a hook, you cannot rely upon helm uninstall to remove the resources. 
+To destroy such resources, you need to either add a custom helm.sh/hook-delete-policy annotation to the hook template file, or set the time to live (TTL) field of a Job resource.
+
+
+
+
+Helm Features:
+
+Package Manager
+Template Engine
+Same Application across multiple Environments
+Release Management /not in 3 because tiller has been removed

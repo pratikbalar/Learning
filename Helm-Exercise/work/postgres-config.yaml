@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgresd
+data:
+  POSTGRES_USER: hydra
+  POSTGRES_PASSWORD: secret
+  POSTGRES_DB: hydra

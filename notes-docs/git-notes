@@ -297,3 +297,8 @@ just incase you find error
 Git error: “Please make sure you have the correct access rights and the repository exists”
 
 git remote set-url origin git@yourGitUrlHere
+
+
+git rm -r --cached folderName(dont add slash)
+
+this will remove nested git folders

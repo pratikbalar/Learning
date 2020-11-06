@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-client-job-1
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: init-mypostgres
+          image: busybox
+          command: ["sh", "-c", "until nslookup my-hydra-service.default.svc.cluster.local; do echo waiting for postgres; sleep 2; done"]
+      containers:
+        - name: create-client
+          image: oryd/hydra:v1.7.4
+          command: ["hydra", "clients", "create", "--endpoint", "http://my-hydra-service.default.svc.cluster.local:4445", "--id", "gitea-client", "--secret", "secret", "--grant-types",  "authorization_code,refresh_token", "--response-types", "code,id_token", "--scope", "openid,offline", "--callbacks", "http://gitea.localhost/user/oauth2/ORY_Hydra/callback"]
+          #command: ["hydra", "token", "user", "--client-id", "gitea-client", "--client-secret", "secret", "--endpoint",  "http://my-hydra-service.default.svc.cluster.local:4444/", "--port", "5555", "--scope", "openid,offline"]
+      restartPolicy: Never
+  backoffLimit: 5
+  
+  #create 2 two jobs for two commands
+  #change endpoint with service endpoint
+  #my-gitea-service.default.svc.cluster.local
+  #my-hydra-service.default.svc.cluster.local
+
+#NOTE: instead of running these two jobs, you can also do the below things (actually better option), Remember here in jobs, we have hard coded these commands, 
+#      installing binary and running below commands would actually  be the smart thing
+
+#   Assuming you have ORY Hydra installed locally, you can rewrite commands from, for example,
+  
+      # $ docker-compose -f quickstart.yml exec hydra \
+      # hydra clients create \
+      # --endpoint http://127.0.0.1:4445/ \
+      # --id my-client \
+      # --secret secret \
+      # -g client_credentials
+      
+      # $ docker-compose -f quickstart.yml exec hydra \
+      # hydra token client \
+      # --endpoint http://127.0.0.1:4444/ \
+      # --client-id my-client \
+      # --client-secret secret
+  
+# to 
+
+      # $ hydra clients create \
+      #   --endpoint http://admin.hydra.localhost/ \
+      #   --id my-client \
+      #   --secret secret \
+      #   -g client_credentials
+    
+      # $ hydra token client \
+      #   --endpoint http://public.hydra.localhost/ \
+      #   --client-id my-client \
+      #   --client-secret secret
