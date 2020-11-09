@@ -20,7 +20,7 @@ Run these commands
 
 ( we are assuming that database(could be anything) is running before we implement the exercise )
 
-Note: in case of other database we weould have to pass --set flag while installing the helm chart, along with the dsn query
+Note: in case of other database we would have to pass --set flag while installing the helm chart, along with the dsn query
 
 
 ```helm install hydra hydra/```
