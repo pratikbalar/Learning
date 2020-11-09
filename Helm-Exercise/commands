@@ -1,0 +1,12 @@
+hydra clients create \
+		--endpoint http://admin.hydra.localhost \
+		--id gitea-client --secret secret \
+		--grant-types authorization_code,refresh_token \
+		--response-types  code,id_token --scope openid,offline \
+		--callbacks http://gitea.localhost/user/oauth2/ORY_Hydra/callback
+
+hydra token user \
+		--client-id gitea-client \
+		--client-secret secret \
+		--endpoint http://hydra.localhost/ \
+		--port 5555 --scope openid,offline

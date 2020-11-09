@@ -43,7 +43,7 @@ spec:
 # to 
 
       # $ hydra clients create \
-      #   --endpoint http://my-hydra-service.default.svc.cluster.local:4445 \
+      #   --endpoint http://my-hydra-service.default.svc.cluster.local:4445 \  #hydra.localhost:4445 (make sure u are making ingress for thgis port too)
       #   --id my-client \
       #   --secret secret \
       #   -g client_credentials
