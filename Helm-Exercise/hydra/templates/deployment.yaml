@@ -69,7 +69,7 @@ spec:
             {{- end}} 
             ]
 
-          # livenessProbe:
+          # livenessProbe:      # /health/alive  https://github.com/ory/k8s/blob/master/helm/charts/hydra/templates/deployment.yaml
           #   httpGet:
           #     path: /
           #     port: adminport
