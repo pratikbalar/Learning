@@ -1,4 +1,4 @@
-Manual Installation
+### Manual Installation
 
 
 this command needs to be run on node1, which will initiate the cluster
@@ -32,7 +32,7 @@ note: you might endup in CA certificates error and error connection rejected, fo
 in last you should see ```kubectl get node``` showing all nodes
 
 
-CloudInit Installation:
+### CloudInit Installation:
 
 paste your Public Key at at ssh -rsa field (make sure you only add key not email address which is there in end)
 
@@ -48,3 +48,5 @@ after installation, try to login into newly installed k3os
 PS: in my case I have added ed25519 pub key to my github key and that is my root account key
 so our init file has to have that only pub key, which will be added in k3os's authorised_keys by github and in last to be able to ssh into that we will have to be 
 sudo su
+
+## make sure you give pastebin.com/raw/$random$ while giving cloudInit file url
