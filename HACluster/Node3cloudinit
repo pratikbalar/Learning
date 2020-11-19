@@ -1,5 +1,5 @@
 ssh_authorized_keys:
-- ssh-rsa 
+- ssh-ed25519 dhasjdkahdkd
 - "github:dharmendrakariya"
 
 k3os:
@@ -14,6 +14,7 @@ k3os:
     kernel.kptr_restrict: "1"
   dns_nameservers:
   - 192.168.1.1
+  - 8.8.8.8
   ntp_servers:
   - 0.in.pool.ntp.org
   - 1.in.pool.ntp.org
