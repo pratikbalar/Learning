@@ -1,0 +1,28 @@
+ssh_authorized_keys:
+- ssh-rsa 
+- "github:dharmendrakariya"
+
+k3os:
+  data_sources:
+  - aws
+  - cdrom
+  modules:
+  - kvm
+  - nvme
+  sysctl:
+    kernel.printk: "4 4 1 7"
+    kernel.kptr_restrict: "1"
+  dns_nameservers:
+  - 192.168.1.1
+  ntp_servers:
+  - 0.in.pool.ntp.org
+  - 1.in.pool.ntp.org
+
+  server_url: https://192.168.1.29:6443  
+  token: secrets
+ 
+  k3s_args:
+  - server
+  - "--node-name=node3"
+ 
+  
