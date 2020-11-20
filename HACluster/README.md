@@ -1,3 +1,10 @@
+### find this PR for clear understanding
+
+``` 
+https://github.com/rancher/docs/pull/2854/commits/f1f80634cc78b46e79f806482975202741ef930b?short_path=2577c40#diff-2577c40058d6bf00724b7a993dd716f2bb7ce211905a03a24db9cfad4a35e0fe  
+```
+
+
 ### Manual Installation
 
 
