@@ -1,5 +1,5 @@
 ssh_authorized_keys:
-- ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ2AcQXVJkeML4cYhE76Fhp6UjmQLvhk1/1hcg9Xddg1 
+- ssh-ed25519 AAAAC3Nza/1hcg9Xddg1 
 - "github:dharmendrakariya"
 
 k3os:
