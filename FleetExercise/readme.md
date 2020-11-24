@@ -15,7 +15,7 @@ GitRepo: Git repositories that are watched by Fleet are represented by the type 
 multi cluster mechanism will have down stream cluster and also agent running inside them, they will use token to register themselves
 
 
-============================================================================================================================================
+=====================================================================================
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add stable https://charts.helm.sh/stable
@@ -42,3 +42,33 @@ hits the urls:
 
 http://localhost:9090
 http://localhost:3000
+
+=====================================================================================
+
+three files are there which are responsible for generating alerts and need to be modified
+
+prometheus.yaml
+premoetheus.rules
+alertmanager.yaml (config.yaml)
+
+however we have to use values.yaml to make the changes
+
+so refer these links
+
+https://grafana.com/blog/2020/02/25/step-by-step-guide-to-setting-up-prometheus-alertmanager-with-slack-pagerduty-and-gmail/
+
+https://gist.github.com/l13t/d432b63641b6972b1f58d7c037eec88f
+
+https://github.com/rancher/k3s/issues/425
+
+https://www.youtube.com/watch?v=thHzf0fmrFQ 
+
+https://github.com/cablespaghetti/k3s-monitoring
+
+=====================================================================================
+
+helm upgrade my-prometheus-operator prometheus-community/kube-prometheus-stack -f slackAlert.yml
+
+helm upgrade my-prometheus-operator prometheus-community/kube-prometheus-stack -f gmailAlert.yml
+
+Ps: templeting please see line 176 from values.yaml file

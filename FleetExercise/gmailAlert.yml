@@ -1,0 +1,60 @@
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+ endpoints:
+  - 192.168.1.29
+kubeScheduler:
+ endpoints:
+  - 192.168.1.29
+
+
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m  
+    route:
+      group_by: ['job']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      #receiver: 'slack'
+      routes:
+      - match:
+          alertname: DeadMansSwitch
+        receiver: 'null'
+      - match:
+          alertname: CPUThrottlingHigh
+        receiver: 'null'
+      - match:
+          alertname: KubeMemoryOvercommit
+        receiver: 'null'
+      - match:
+          alertname: KubeCPUOvercommit
+        receiver: 'null'
+      - match:
+          alertname: KubeletTooManyPods
+        receiver: 'null'
+      - match:
+        receiver: 'gmail-notifications'
+        continue: true
+    receivers:
+    - name: 'null'
+    - name: 'gmail-notifications'
+      email_configs:
+      - to: dharmendra@improwised.com
+        from: dharmendra@improwised.com
+        smarthost: smtp.gmail.com:587
+        auth_username: dharmendra@improwised.com
+        auth_identity: dharmendra@improwised.com
+        auth_password: zjwaybtvtxgfufjm
+        send_resolved: true
+    
+    # Inhibition rules allow to mute a set of alerts given that another alert is firing.
+    # We use this to mute any warning-level notifications if the same alert is already critical.
+    # inhibit_rules:
+    # - source_match:
+    #     severity: 'critical'
+    #   target_match:
+    #     severity: 'warning'
+    #   # Apply inhibition if the alertname is the same.
+    #   equal: ['alertname', 'namespace']
