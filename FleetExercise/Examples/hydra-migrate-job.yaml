@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hydra-migrate-job
+spec:
+  template:
+    spec:
+      #initContainers:
+      #- name: init-mypostgres
+      #  image: busybox
+      #  command: ["sh", "-c", "until nslookup my-hydra-service.default.svc.cluster.local; do echo waiting for postgres; sleep 2; done"]
+
+      containers:
+        - name: hydra-migrate
+          image: oryd/hydra:v1.7.4
+          command: ['hydra']
+          args: ['migrate', 'sql', '-e', '--yes']
+          env:
+            - name: DSN
+              value: "postgres://hydra:secret@postgres.default.svc.cluster.local:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4"
+      restartPolicy: Never
+  backoffLimit: 5
