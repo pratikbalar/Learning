@@ -7,7 +7,7 @@ defaultNamespace: default
 # Custom helm options
 helm:
   # The release name to use. If empty a generated release name will be used
-  releaseName: p2-opera
+  releaseName: prometheus-1110
 
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
@@ -18,7 +18,7 @@ helm:
   repo: "https://prometheus-community.github.io/helm-charts"
       
   # Used if repo is set to look up the version of the chart
-  version: "12.2.1"
+  version: "11.1.0"
 
   # Force recreate resource that can not be updated
   force: true 
