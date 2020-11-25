@@ -2,7 +2,7 @@
 
 # The namespace this chart will be installed to,
 # if not specified the chart will be installed to "default"
-defaultNamespace: default
+namespace: default
 
 # Custom helm options
 helm:
