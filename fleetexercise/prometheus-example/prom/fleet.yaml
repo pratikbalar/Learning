@@ -15,7 +15,7 @@ helm:
   chart: "cert-manager"
 
   # An https to a valid Helm repository to download the chart from
-  repo: "https://charts.jetstack.io"
+  repo: "https://prometheus-community.github.io/helm-charts"
       
   # Used if repo is set to look up the version of the chart
   version: "v0.15.0"
