@@ -4,6 +4,6 @@ metadata:
   name: my-repo
   namespace: fleet-local
 spec:
-  repo: https://github.com/dharmendrakariya/Learning
+  repo: https://github.com/dharmendrakariya/Learning/
   paths:
   - FleetExercise/Examples
