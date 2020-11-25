@@ -21,7 +21,7 @@ kubectl apply -f xyz.yaml
 ```
 
 
-ps: fleet doesn't have regex for capital letters, I mean make sure you use small letters only in folder name convention.
+```ps: fleet doesn't have regex for capital letters, I mean make sure you use small letters only in folder name convention.```
 
 otherwise you will see something like this.
 
