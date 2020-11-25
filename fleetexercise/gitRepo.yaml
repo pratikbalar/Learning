@@ -6,4 +6,4 @@ metadata:
 spec:
   repo: https://github.com/dharmendrakariya/Learning/
   paths:
-  - FleetExercise/Examples
+  - fleetexercise/examples
