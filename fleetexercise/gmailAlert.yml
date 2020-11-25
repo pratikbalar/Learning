@@ -7,7 +7,6 @@ kubeScheduler:
  endpoints:
   - 192.168.1.29
 
-
 alertmanager:
   config:
     global:
