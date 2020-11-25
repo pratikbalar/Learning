@@ -7,18 +7,18 @@ defaultNamespace: default
 # Custom helm options
 helm:
   # The release name to use. If empty a generated release name will be used
-  releaseName: kube-prometheus-stack
+  releaseName: cmanager
 
   # The directory of the chart in the repo.  Also any valid go-getter supported
   # URL can be used there is specify where to download the chart from.
   # If repo below is set this value if the chart name in the repo
-  chart: "kube-prometheus-stack"
+  chart: "cert-manager"
 
   # An https to a valid Helm repository to download the chart from
-  repo: https://prometheus-community.github.io/helm-charts
+  repo: "https://charts.jetstack.io"
       
   # Used if repo is set to look up the version of the chart
-  #version: ""
+  version: "v0.15.0"
 
   # Force recreate resource that can not be updated
   #force: false
