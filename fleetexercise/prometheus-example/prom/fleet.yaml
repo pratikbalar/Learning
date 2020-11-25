@@ -18,7 +18,7 @@ helm:
   repo: "https://prometheus-community.github.io/helm-charts"
       
   # Used if repo is set to look up the version of the chart
-  version: "12.2.1"
+  #version: "12.2.1"
 
   # Force recreate resource that can not be updated
   #force: false
